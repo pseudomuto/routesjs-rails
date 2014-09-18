@@ -24,5 +24,14 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
+namespace :test do
+  task :js do
+    Dir.chdir("test/dummy") do
+      system("bin/rake teaspoon")
+    end
+  end
+end
+
+Rake::Task[:test].enhance { Rake::Task["test:js"].invoke }
 
 task default: :test

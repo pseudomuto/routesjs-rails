@@ -1,3 +1,5 @@
+require "action_dispatch/routing/inspector"
+
 module RoutesJS
   class Formatter
     REDIRECT_URL = /\Aredirect\(\d+,([^)]+)\)\z/.freeze

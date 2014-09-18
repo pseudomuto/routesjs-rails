@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require "sprockets/railtie"
 
 Bundler.require(*Rails.groups)
-require "routesjs/rails"
+require "routesjs-rails"
 
 module Dummy
   class Application < Rails::Application
