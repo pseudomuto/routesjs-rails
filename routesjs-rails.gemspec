@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Make named rails routes available in JS"
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{lib,vendor/assets}/**/*", "LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.1.6"
