@@ -6,7 +6,7 @@ require "routesjs/rails/version"
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "routesjs-rails"
-  s.version     = RoutesJs::Rails::VERSION
+  s.version     = RoutesJS::Rails::VERSION
   s.authors     = ["David Muto"]
   s.email       = ["david.muto@gmail.com"]
   s.homepage    = "https://github.com/pseudomuto/routesjs-rails"

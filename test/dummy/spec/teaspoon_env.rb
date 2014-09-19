@@ -5,8 +5,7 @@ unless defined?(Rails)
 end
 
 Teaspoon.configure do |config|
-  config.root = File.expand_path("../../../../", __FILE__)
-  #config.root = "/home/vagrant/Code/routesjs_rails"
+  config.root = RoutesJS::Rails::Engine.root
   # Determines where the Teaspoon routes will be mounted. Changing this to "/jasmine" would allow you to browse to
   # `http://localhost:3000/jasmine` to run your tests.
   #config.mount_at = "/teaspoon"

@@ -1,4 +1,4 @@
-module RoutesJs
+module RoutesJS
   module Rails
     class Engine < ::Rails::Engine
     end

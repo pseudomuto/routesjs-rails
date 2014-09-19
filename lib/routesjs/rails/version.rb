@@ -1,4 +1,4 @@
-module RoutesJs
+module RoutesJS
   module Rails
     VERSION = "0.0.1"
   end
