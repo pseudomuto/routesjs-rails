@@ -1,6 +1,9 @@
 # routesjs-rails
 
-This project rocks and uses MIT-LICENSE.
+[![Build
+Status](https://travis-ci.org/pseudomuto/routesjs-rails.svg?branch=master)](https://travis-ci.org/pseudomuto/routesjs-rails)
+
+Make your Rails routes available in JS!
 
 # Installation
 
@@ -9,11 +12,6 @@ Just add `gem routesjs-rails` to your _Gemfile_ and run `bundle install`
 # Using with Sprockets
 
 Add `//= require routesjs-rails` to your _application.js_ file.
-
-># Using as a CommonJS Module
-
->If you happen to be using some kind of CommonJS framework to manage your Js, you can require
->routesjs as a module like this `require("routesjs")`.
 
 # Generating Routes
 

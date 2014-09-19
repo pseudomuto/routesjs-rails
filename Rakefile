@@ -24,14 +24,11 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
-namespace :test do
-  task :js do
-    Dir.chdir("test/dummy") do
-      system("bin/rake teaspoon")
-    end
-  end
+desc "Run the javascript specs"
+task :teaspoon do
+  system("bundle exec teaspoon -r test/dummy/spec/teaspoon_env.rb")
 end
 
-Rake::Task[:test].enhance { Rake::Task["test:js"].invoke }
+Rake::Task[:test].enhance { Rake::Task["teaspoon"].invoke }
 
 task default: :test
