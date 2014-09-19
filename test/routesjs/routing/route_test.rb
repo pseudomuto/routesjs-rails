@@ -19,6 +19,14 @@ class RoutesJS::Routing::RouteTest < ActiveSupport::TestCase
     assert_equal "/", routes["apiRedir"]
   end
 
+  test "root route is supported" do
+    assert_equal "/", routes["root"]
+  end
+
+  test "root route inside a namespace also good" do
+    assert_equal "/api", routes["apiRoot"]
+  end
+
   private
 
   def routes
@@ -29,10 +37,12 @@ class RoutesJS::Routing::RouteTest < ActiveSupport::TestCase
     @app_routes ||= begin
       with_routing do |set|
         set.draw do
+          root to: "home#index"
           get "/admin", to: "home#index", as: :admin
           get "/google", to: redirect("https://www.google.com/"), as: :google
 
           namespace :api do
+            root to: "api#index"
             get "/redir", to: redirect("/"), as: :redir
             resources :users, only: [:index, :show]
           end

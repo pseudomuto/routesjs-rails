@@ -24,7 +24,11 @@ module RoutesJS
       end
 
       def redirect_url(route)
-        route.app.block
+        if route.app.block.is_a?(String)
+          route.app.block
+        else
+          route.app.block.call([], nil)
+        end
       end
 
       def redirect?(route)
