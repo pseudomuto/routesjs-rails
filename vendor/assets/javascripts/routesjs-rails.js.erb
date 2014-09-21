@@ -2,13 +2,20 @@ var Routes = (function(railsRoutes) {
   var BASE_URL = document.location.protocol +"//" + document.location.host;
   var PARAM_PATTERN = /:[^\/$]+(\/|$)/
 
+  var isUrl = function(path) {
+    return /^https?:\/\//.test(path);
+  };
+
   var addRoute = function(name, path) {
     RouteSet[name +"Path"] = function() {
       return buildRoute(path, arguments);
     };
 
     RouteSet[name +"Url"] = function() {
-      return buildRoute(BASE_URL + path, arguments);
+      var finalPath = path;
+      if (!isUrl(path)) finalPath = BASE_URL + path;
+
+      return buildRoute(finalPath, arguments);
     };
   };
 
@@ -61,5 +68,3 @@ var Routes = (function(railsRoutes) {
   RouteSet.initRoutes(railsRoutes);
   return RouteSet;
 })(<%= RoutesJS::Routes.as_json %>);
-
-window.Routes = Routes;

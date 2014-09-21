@@ -27,6 +27,12 @@ class RoutesJS::Routing::RouteTest < ActiveSupport::TestCase
     assert_equal "/api", routes["apiRoot"]
   end
 
+  test "routes that start with /rails are excluded" do
+    routes.each do |key, value|
+      refute key =~ /\Arails/
+    end
+  end
+
   private
 
   def routes
@@ -40,6 +46,7 @@ class RoutesJS::Routing::RouteTest < ActiveSupport::TestCase
           root to: "home#index"
           get "/admin", to: "home#index", as: :admin
           get "/google", to: redirect("https://www.google.com/"), as: :google
+          get "/rails/props", to: "home#index", as: :rails_props
 
           namespace :api do
             root to: "api#index"

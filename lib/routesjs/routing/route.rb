@@ -9,7 +9,7 @@ module RoutesJS
       end
 
       def valid?
-        name.present?
+        !(name.blank? || /^rails/.match(name))
       end
 
       private

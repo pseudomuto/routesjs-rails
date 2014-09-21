@@ -6,6 +6,7 @@ describe("Routes", function() {
   describe("simple path and url generation", function() {
     beforeEach(function() {
       Routes.initRoutes({
+        "google": "https://www.google.com/",
         "oauthToken": "/oauth/token",
         "adminRoot": "/admin"
       });
@@ -19,6 +20,11 @@ describe("Routes", function() {
     it("makes a url function for each route", function() {
       expect(Routes.oauthTokenUrl()).toBe("//example.com/oauth/token");
       expect(Routes.adminRootUrl()).toBe("//example.com/admin");
+    });
+
+    it("returns the raw route for both path and url when absolute", function() {
+      expect(Routes.googlePath()).toBe("https://www.google.com/");
+      expect(Routes.googleUrl()).toBe("https://www.google.com/");
     });
   });
 
