@@ -1,7 +1,8 @@
 # routesjs-rails
 
-[![Build
-Status](https://travis-ci.org/pseudomuto/routesjs-rails.svg?branch=master)](https://travis-ci.org/pseudomuto/routesjs-rails)
+[![Build Status](https://travis-ci.org/pseudomuto/routesjs-rails.svg?branch=master)](https://travis-ci.org/pseudomuto/routesjs-rails)
+[![Gem Version](https://badge.fury.io/rb/routesjs-rails.svg)](https://rubygems.org/gems/routesjs-rails)
+[![Code Climate](https://codeclimate.com/github/pseudomuto/routesjs-rails/badges/gpa.svg)](https://codeclimate.com/github/pseudomuto/routesjs-rails)
 
 Make your Rails routes available in JS!
 
