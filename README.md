@@ -12,14 +12,18 @@ Make your Rails routes available in JS!
 
 # Usage
 
-Including the routesjs-rails script will make a global object available called `Routes`. This object
-will have two methods for every _named_ routes in config/routes.rb; the path method and the url
+Requiring `routesjs-rails` will make a global object available called `Routes`. This object
+will have two methods for every _named_ route in config/routes.rb; the path method and the url
 method.
 
 The _path_ version of the method will return the absolute path to the resource, while the _url_
 version will return the full (including protocol, hostname, port, etc) URL to the resource.
 
-## For Example
+```
+// e.g.
+Routes.userPath(1);
+Routes.rootUrl();
+```
 
 Suppose we have the following in _config/routes.rb_:
 
@@ -60,13 +64,23 @@ Method | Result
 `Routes.apiRootUrl()` | `http://www.example.com/api`
 `Routes.apiUsersPath()` | `/api/users`
 `Routes.apiUsersUrl()` | `http://www.example.com/api/users`
-`Routes.apiUserPath(1)` | `/api/users/1`
-`Routes.apiUserPath({ id: 1 })` | `/api/users/1`
-`Routes.apiUserUrl(1)` | `http://www.example.com/api/users/1`
-`Routes.apiUserUrl({ id: 1 })` | `http://www.example.com/api/users/1`
+`Routes.apiUserPath()` | `/api/users/:id`
+`Routes.apiUserUrl()` | `http://www.example.com/api/users/:id`
 
 For routes with parameters, you can pass the as simple arguments to the method or as an object that
 responds to the parameter name (see `apiUsersPath` above for an example).
+
+## Route Parameters
+
+Parameters can be passed to a route using arguments to the path/url method. There are two ways to do
+this, using argument values in the order they're supplied, or by passing an object that responds to
+each route parameter name.
+
+```
+// route in rails: /users/:id/roles/:role_id
+Routes.userRolePath(1, 2); // returns /users/1/roles/2
+Routes.userRolePath({ id: 1, role_id: 2 }); // also returns /users/1/roles/2
+```
 
 # Generating Routes
 
