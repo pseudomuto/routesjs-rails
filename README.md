@@ -47,7 +47,7 @@ We would end up with the following routes being defined:
 }
 ```
 
-This object will be passed to the Route object's `initRoutes` method, which will make the following
+This object will be passed to the Route object's initialization function, which will make the following
 methods available (assuming you're running your site at `http://www.example.com/`):
 
 Method | Result
