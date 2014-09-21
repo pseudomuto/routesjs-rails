@@ -1,3 +1,3 @@
 require "routesjs/rails"
-require "routesjs/formatter"
+require "routesjs/routing/route"
 require "routesjs/routes"

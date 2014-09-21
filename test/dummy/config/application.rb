@@ -1,9 +1,10 @@
 require File.expand_path('../boot', __FILE__)
 
-require "sprockets/railtie"
+%w(action_controller rails/test_unit sprockets).each do |framework|
+  require "#{framework}/railtie"
+end
 
 Bundler.require(*Rails.groups)
-require "routesjs-rails"
 
 module Dummy
   class Application < Rails::Application

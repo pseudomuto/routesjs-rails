@@ -1,12 +1,25 @@
 language: ruby
 cache: bundler
 rvm:
+  - 1.9.3
+  - 2.0.0
   - 2.1.2
 
+env:
+  - DISPLAY=":99.0"
+before_script:
+  - 'sh -e /etc/init.d/xvfb start'
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
 
-before_script:
-  - 'sh -e /etc/init.d/xvfb start'
-env:
-  - DISPLAY=":99.0"
+gemfile:
+  - gemfiles/rails_3_2.gemfile
+  - gemfiles/rails_4_0.gemfile
+  - gemfiles/rails_4_1.gemfile
+  - gemfiles/rails_4_2_beta.gemfile
+
+matrix:
+  fast_finish: true
+
+notifications:
+  email: false

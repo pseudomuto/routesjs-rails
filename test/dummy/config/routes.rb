@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root "home#index"
+  root to: "home#index"
 
   namespace :admin do
     get "/google", to: redirect("https://www.google.com/"), as: :google
