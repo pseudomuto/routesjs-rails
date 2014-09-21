@@ -85,7 +85,8 @@ Routes.userRolePath({ id: 1, role_id: 2 }); // also returns /users/1/roles/2
 
 # Generating Routes
 
-If you want to create a routes file manually, you can run `bundle exec routesjs:generate` which will
-show you a JSON version of your routes.
+If you want to create a routes file manually, you can run `bundle exec rake routesjs:generate` which
+will generate the full output of the routejs-rails javascript file (including your routes at the
+bottom).
 
 You can save this output to a file, or use it to inspect the generated result if necessary.
