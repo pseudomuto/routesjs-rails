@@ -67,8 +67,9 @@ var Routes = (function(railsRoutes) {
 
   RouteSet.initRoutes(railsRoutes);
   return RouteSet;
-})(<%= RoutesJS::Routes.as_json %>);
+})({"teaspoon":"/teaspoon","root":"/","adminGoogle":"https://www.google.com/","rolesAdminUser":"/admin/users/:id/roles","adminUsers":"/admin/users","newAdminUser":"/admin/users/new","editAdminUser":"/admin/users/:id/edit","adminUser":"/admin/users/:id"});
 
 if (typeof(module) !== 'undefined') {
   module.exports = Routes;
 }
+;
