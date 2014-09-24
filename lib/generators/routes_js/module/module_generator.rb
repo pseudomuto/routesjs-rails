@@ -23,7 +23,7 @@ module RoutesJs
       private
 
       def rails_application
-        ::Rails::Application.subclasses.map(&:instance).first
+        Rails.application
       end
 
       def readme_message

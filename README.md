@@ -86,20 +86,13 @@ Routes.userRolePath({ id: 1, role_id: 2 }); // also returns /users/1/roles/2
 # Using as a CommonJS Module
 
 If you'd like to use your routes in a CommonJS module, you'll need to generate the module file by
-running the following:
+running the following (`-o` parameter is optional):
 
 ```
-rails g routes_js:module
+rails g routes_js:module [-o <full_path>]
 ```
 
-This will generator a JS module at _app/assets/javascripts/routejs.js_. If you'd like to change the
-path you can supply the `-o` option.
+By default, this will generate a JS module at _app/assets/javascripts/routejs.js_. If you've
+specified the `-o` option, the file will be placed where you specified. 
 
-```
-rails g routes_js:module -o <full_path>
-```
-If you want to create a routes file manually, you can run `bundle exec rake routesjs:generate` which
-will generate the full output of the routejs-rails javascript file (including your routes at the
-bottom).
-
-You can save this output to a file, or use it to inspect the generated result if necessary.
+Now you can use your module by requiring it: `var Routes = require("routesjs")`
