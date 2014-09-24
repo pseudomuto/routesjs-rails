@@ -12,7 +12,7 @@ module RoutesJs
         default: "app/assets/javascripts/routesjs.js"
 
       def generate_routes_module
-        js_module = Rails.application.assets["routesjs-rails"].to_s
+        js_module = rails_application.assets["routesjs-rails"].to_s
         create_file(options[:output_file], js_module)
       end
 
@@ -21,6 +21,10 @@ module RoutesJs
       end
 
       private
+
+      def rails_application
+        ::Rails::Application.subclasses.map(&:instance).first
+      end
 
       def readme_message
         log "+============================================================================+"
