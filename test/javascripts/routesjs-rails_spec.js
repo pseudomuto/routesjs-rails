@@ -71,4 +71,42 @@ describe("Routes", function() {
       expect(Routes.rootPath(1, 2)).toBe("/");
     });
   });
+
+  describe("specifying formats on a route by route basis", function() {
+    beforeEach(function() {
+      Routes.initRoutes({
+        "login": "/login",
+        "user": "/users/:id",
+        "userRole": "/users/:id/roles/:role_id"
+      });
+    });
+
+    it("uses the format property when specified", function() {
+      expect(Routes.loginPath({ format: "html" })).toBe("/login.html");
+      expect(Routes.userPath({ id: 1, format: "json" })).toBe("/users/1.json");
+      expect(Routes.userRolePath({ id: 1, role_id: 2, format: "json" })).toBe("/users/1/roles/2.json");
+    });
+  });
+
+  describe("specifying default format", function() {
+    beforeEach(function() {
+      Routes.initRoutes({
+        "login": "/login",
+        "user": "/users/:id",
+        "userRole": "/users/:id/roles/:role_id"
+      }, "json");
+    });
+
+    it("applies the default format to routes", function() {
+      expect(Routes.loginPath()).toBe("/login.json");
+      expect(Routes.userPath(1)).toBe("/users/1.json");
+      expect(Routes.userRolePath(1, 2)).toBe("/users/1/roles/2.json");
+    });
+
+    it("allows overriding the default format", function() {
+      expect(Routes.loginPath({ format: "html" })).toBe("/login.html");
+      expect(Routes.userPath({ format: "html", id: 1 })).toBe("/users/1.html");
+      expect(Routes.userRolePath({ format: "html", id: 1, role_id: 2 })).toBe("/users/1/roles/2.html");
+    });
+  });
 });
