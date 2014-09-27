@@ -8,8 +8,11 @@ Make your Rails routes available in JS!
 
 # Installation
 
-* Just add `gem routesjs-rails` to your _Gemfile_ and run `bundle install`
+* Add `gem routesjs-rails` to your _Gemfile_ and run `bundle install`
 * Add `//= require routesjs-rails` to your _application.js_ file.
+
+Optionally, you can run `rails g routes_js:install` to create an initializer for configuring
+routesjs-rails.
 
 # Usage
 
@@ -82,6 +85,16 @@ each route parameter name.
 Routes.userRolePath(1, 2); // returns /users/1/roles/2
 Routes.userRolePath({ id: 1, role_id: 2 }); // also returns /users/1/roles/2
 ```
+
+## Route Formats
+
+You can generate format (json, html, etc) routes by passing an object with a format property. For
+example:
+
+`Routes.userRolePath({ id: 1, role_id: 2, format: "json" }) // returns /users/1/roles/2.json`
+
+You can also configure a default format globally by setting `RoutesJS::Routes.default_format` in the
+initializer (run `rails g routes_js:install` to create a commented initializer).
 
 # Using as a CommonJS Module
 
