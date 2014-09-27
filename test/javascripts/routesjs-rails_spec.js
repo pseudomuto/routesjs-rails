@@ -6,9 +6,11 @@ describe("Routes", function() {
   describe("simple path and url generation", function() {
     beforeEach(function() {
       Routes.initRoutes({
-        "google": "https://www.google.com/",
-        "oauthToken": "/oauth/token",
-        "adminRoot": "/admin"
+        "routes": {
+          "google": "https://www.google.com/",
+          "oauthToken": "/oauth/token",
+          "adminRoot": "/admin"
+        }
       });
     });
 
@@ -31,9 +33,11 @@ describe("Routes", function() {
   describe("token replacement with object", function() {
     beforeEach(function() {
       Routes.initRoutes({
-        "user": "/users/:id",
-        "userRoles": "/users/:id/roles",
-        "userRole": "/users/:id/roles/:role_id"
+        "routes": {
+          "user": "/users/:id",
+          "userRoles": "/users/:id/roles",
+          "userRole": "/users/:id/roles/:role_id"
+        }
       });
     });
 
@@ -52,9 +56,11 @@ describe("Routes", function() {
   describe("token replacement with arguments", function() {
     beforeEach(function() {
       Routes.initRoutes({
-        "root": "/",
-        "user": "/users/:id",
-        "userRole": "/users/:id/roles/:role_id"
+        "routes": {
+          "root": "/",
+          "user": "/users/:id",
+          "userRole": "/users/:id/roles/:role_id"
+        }
       });
     });
 
@@ -75,9 +81,11 @@ describe("Routes", function() {
   describe("specifying formats on a route by route basis", function() {
     beforeEach(function() {
       Routes.initRoutes({
-        "login": "/login",
-        "user": "/users/:id",
-        "userRole": "/users/:id/roles/:role_id"
+        "routes": {
+          "login": "/login",
+          "user": "/users/:id",
+          "userRole": "/users/:id/roles/:role_id"
+        }
       });
     });
 
@@ -91,10 +99,13 @@ describe("Routes", function() {
   describe("specifying default format", function() {
     beforeEach(function() {
       Routes.initRoutes({
-        "login": "/login",
-        "user": "/users/:id",
-        "userRole": "/users/:id/roles/:role_id"
-      }, "json");
+        "routes": {
+          "login": "/login",
+          "user": "/users/:id",
+          "userRole": "/users/:id/roles/:role_id"
+        },
+        "format": "json"
+      });
     });
 
     it("applies the default format to routes", function() {

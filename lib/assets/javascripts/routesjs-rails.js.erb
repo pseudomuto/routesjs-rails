@@ -1,4 +1,4 @@
-var Routes = (function(railsRoutes) {
+var Routes = (function(config) {
   var BASE_URL = document.location.protocol +"//" + document.location.host;
   var PARAM_PATTERN = /:[^\/\.$]+(\/|$|\.)/;
   var DEFAULT_FORMAT = "";
@@ -81,18 +81,19 @@ var Routes = (function(railsRoutes) {
     setBaseUrl: function(protocol_and_host) {
       BASE_URL = protocol_and_host.replace(/\/$/, "");
     },
-    initRoutes: function(routes, format) {
-      if(format) DEFAULT_FORMAT = format;
+    initRoutes: function(configuration) {
+      DEFAULT_FORMAT = "";
+      if(configuration.format) DEFAULT_FORMAT = configuration.format;
 
-      Object.keys(routes).map(function(key) {
-        addRoute(key, routes[key]);
+      Object.keys(configuration.routes).map(function(key) {
+        addRoute(key, configuration.routes[key]);
       });
     }
   };
 
-  RouteSet.initRoutes(railsRoutes);
+  RouteSet.initRoutes(config);
   return RouteSet;
-})(<%= RoutesJS::Routes.as_json %>);
+})(<%= RoutesJS::Routes.as_json.to_json %>);
 
 if (typeof(module) !== 'undefined') {
   module.exports = Routes;
