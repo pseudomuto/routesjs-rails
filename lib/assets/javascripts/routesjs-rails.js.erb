@@ -1,18 +1,19 @@
 var Routes = (function(config) {
-  var VALID_FORMATS = ["html", "json", "xml"];
   var BASE_URL = document.location.protocol +"//" + document.location.host;
   var PARAM_PATTERN = /:[^\/\.$]+(\/|$|\.)/;
   var DEFAULT_FORMAT = "";
+  var FORMAT_PATTERN = /\.[^\.]+$/
 
-  String.prototype.none = function() {
-    return this.replace(/\.[^\.]+$/, "");
+  var formatRoute = function(route, format) {
+    return route.replace(FORMAT_PATTERN, format);
   };
 
-  VALID_FORMATS.map(function(format) {
-    String.prototype[format] = function() {
-      return this.replace(/\..*$/, "." + format);
-    };
-  });
+  var formatMethods = {
+    none: function() { return formatRoute(this, ""); },
+    json: function() { return formatRoute(this, ".json"); },
+    html: function() { return formatRoute(this, ".html"); },
+    xml: function() { return formatRoute(this, ".xml"); }
+  };
 
   var thread = function() {
     var params = Array.prototype.slice.call(arguments);
@@ -39,17 +40,26 @@ var Routes = (function(config) {
     return path.replace(/:format$/, DEFAULT_FORMAT);
   };
 
+  var routify = function(path) {
+    var route = new String(path);
+    Object.keys(formatMethods).map(function(method) {
+      this[method] = formatMethods[method];
+    }, route);
+
+    return route;
+  };
+
   var addRoute = function(name, path) {
     var pathWithFormat = path + ".:format";
     var urlWithFormat = BASE_URL + pathWithFormat;
     if (isUrl(pathWithFormat)) urlWithFormat = pathWithFormat;
 
     RouteSet[name +"Path"] = function() {
-      return thread(buildRoute(pathWithFormat, arguments), applyFormat, trimFormat);
+      return thread(buildRoute(pathWithFormat, arguments), applyFormat, trimFormat, routify);
     };
 
     RouteSet[name +"Url"] = function() {
-      return thread(buildRoute(urlWithFormat, arguments), applyFormat, trimFormat);
+      return thread(buildRoute(urlWithFormat, arguments), applyFormat, trimFormat, routify);
     };
   };
 
