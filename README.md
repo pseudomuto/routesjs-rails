@@ -94,7 +94,19 @@ example:
 `Routes.userRolePath({ id: 1, role_id: 2, format: "json" }) // returns /users/1/roles/2.json`
 
 You can also configure a default format globally by setting `RoutesJS::Routes.default_format` in the
-initializer (run `rails g routes_js:install` to create a commented initializer).
+initializer (run `rails g routes_js:install` to create a commented initializer). Formats specified
+in the object will override the default format.
+
+You can also call the `json(), html(), xml() and none()` methods on routes. Doing so will override 
+the default and object supplied formats. For example:
+
+```
+// assuming .html is the default format in config/initializers/routesjs-rails.rb
+apiUsersPath(1) // returns /api/users/1.html
+apiUsersPath({ id: 1, format: "xml" }) // returns /api/users/1.xml
+apiUsersPath({ id: 1, format: "xml" }).json() // returns /api/users/1.json
+apiUsersPath(1).none() // returns /api/users/1
+```
 
 # Using as a CommonJS Module
 
