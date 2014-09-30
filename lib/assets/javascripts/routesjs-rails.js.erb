@@ -5,14 +5,18 @@ var Routes = (function(config) {
   var FORMAT_PATTERN = /\.[^\.]+$/
 
   var formatRoute = function(route, format) {
-    return route.replace(FORMAT_PATTERN, format);
+    return routify(route.replace(FORMAT_PATTERN, format));
   };
 
-  var formatMethods = {
-    none: function() { return formatRoute(this, ""); },
-    json: function() { return formatRoute(this, ".json"); },
-    html: function() { return formatRoute(this, ".html"); },
-    xml: function() { return formatRoute(this, ".xml"); }
+  var RouteString = function(route) { this._route = route; };
+
+  RouteString.prototype = {
+    none: function() { return formatRoute(this._route, ""); },
+    json: function() { return formatRoute(this._route, ".json"); },
+    html: function() { return formatRoute(this._route, ".html"); },
+    xml: function() { return formatRoute(this._route, ".xml"); },
+    valueOf: function() { return this._route; },
+    toString: function() { return this._route; }
   };
 
   var thread = function() {
@@ -41,12 +45,7 @@ var Routes = (function(config) {
   };
 
   var routify = function(path) {
-    var route = new String(path);
-    Object.keys(formatMethods).map(function(method) {
-      this[method] = formatMethods[method];
-    }, route);
-
-    return route;
+    return new RouteString(path);
   };
 
   var addRoute = function(name, path) {
