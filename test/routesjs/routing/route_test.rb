@@ -36,7 +36,7 @@ class RoutesJS::Routing::RouteTest < ActiveSupport::TestCase
   private
 
   def routes
-    @routes ||= JSON.parse(RoutesJS::Routes.as_json(app_routes))
+    @routes ||= RoutesJS::Routes.as_json(app_routes)["routes"]
   end
 
   def app_routes

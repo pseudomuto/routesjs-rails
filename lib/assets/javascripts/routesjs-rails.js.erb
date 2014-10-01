@@ -1,0 +1,119 @@
+var Routes = (function(config) {
+  var BASE_URL = document.location.protocol +"//" + document.location.host;
+  var PARAM_PATTERN = /:[^\/\.$]+(\/|$|\.)/;
+  var DEFAULT_FORMAT = "";
+  var FORMAT_PATTERN = /\.[^\.]+$/
+
+  var formatRoute = function(route, format) {
+    return routify(route.replace(FORMAT_PATTERN, format));
+  };
+
+  var RouteString = function(route) { this._route = route; };
+
+  RouteString.prototype = {
+    none: function() { return formatRoute(this._route, ""); },
+    json: function() { return formatRoute(this._route, ".json"); },
+    html: function() { return formatRoute(this._route, ".html"); },
+    xml: function() { return formatRoute(this._route, ".xml"); },
+    valueOf: function() { return this._route; },
+    toString: function() { return this._route; }
+  };
+
+  var thread = function() {
+    var params = Array.prototype.slice.call(arguments);
+    var value = params.shift();
+    var func = null;
+
+    while (params.length) {
+      func = params.shift();
+      value = func(value);
+    }
+
+    return value;
+  };
+
+  var isUrl = function(path) {
+    return /^https?:\/\//.test(path);
+  };
+
+  var trimFormat = function(path) {
+    return path.replace(/\.$/, "");
+  };
+
+  var applyFormat = function(path) {
+    return path.replace(/:format$/, DEFAULT_FORMAT);
+  };
+
+  var routify = function(path) {
+    return new RouteString(path);
+  };
+
+  var addRoute = function(name, path) {
+    var pathWithFormat = path + ".:format";
+    var urlWithFormat = BASE_URL + pathWithFormat;
+    if (isUrl(pathWithFormat)) urlWithFormat = pathWithFormat;
+
+    RouteSet[name +"Path"] = function() {
+      return thread(buildRoute(pathWithFormat, arguments), applyFormat, trimFormat, routify);
+    };
+
+    RouteSet[name +"Url"] = function() {
+      return thread(buildRoute(urlWithFormat, arguments), applyFormat, trimFormat, routify);
+    };
+  };
+
+  var buildRoute = function(route, args) {
+    if (!(args && args.length)) return route;
+    if (!PARAM_PATTERN.test(route)) return route;
+
+    if(args.length === 1 && args[0] instanceof Object) {
+      return buildRouteWithObject(route, args[0]);
+    } else {
+      return buildRouteWithValues(applyFormat(route), args);
+    }
+  };
+
+  var buildRouteWithObject = function(route, fromObject) {
+    var token = null, key = null;
+    var tokens = Object.keys(fromObject);
+
+    for (var i = 0; i < tokens.length; i++) {
+      key = tokens[i];
+      token = fromObject[key].toString();
+      route = route.replace(RegExp(":" + key.toString()), token);
+    }
+
+    return route;
+  };
+
+  var buildRouteWithValues = function(route, values) {
+    var param = null;
+
+    while (PARAM_PATTERN.test(route) && values.length) {
+      param = [].shift.call(values).toString();
+      route = route.replace(PARAM_PATTERN, param + "$1");
+    }
+
+    return route;
+  };
+
+  var RouteSet = {
+    setBaseUrl: function(protocol_and_host) {
+      BASE_URL = protocol_and_host.replace(/\/$/, "");
+    },
+    initRoutes: function(configuration) {
+      DEFAULT_FORMAT = configuration.format ? configuration.format : ""
+
+      Object.keys(configuration.routes).map(function(key) {
+        addRoute(key, configuration.routes[key]);
+      });
+    }
+  };
+
+  RouteSet.initRoutes(config);
+  return RouteSet;
+})(<%= RoutesJS::Routes.as_json.to_json %>);
+
+if (typeof(module) !== 'undefined') {
+  module.exports = Routes;
+}

@@ -24,15 +24,15 @@ module RoutesJS
       end
 
       def redirect_url(route)
-        if route.app.block.is_a?(String)
-          route.app.block
-        else
-          route.app.block.call([], nil)
-        end
+        app(route).block
       end
 
       def redirect?(route)
-        route.app.respond_to?(:block)
+        app(route).respond_to?(:block)
+      end
+
+      def app(route)
+        route.app.respond_to?(:app) ? route.app.app : route.app
       end
     end
   end
