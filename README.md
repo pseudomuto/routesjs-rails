@@ -6,6 +6,8 @@
 
 Make your Rails routes available in JS!
 
+**Supports Ruby 1.9.3+ and Rails 4.0+**
+
 # Installation
 
 * Add `gem routesjs-rails` to your _Gemfile_ and run `bundle install`
@@ -23,7 +25,7 @@ method.
 The _path_ version of the method will return the absolute path to the resource, while the _url_
 version will return the full (including protocol, hostname, port, etc) URL to the resource.
 
-```
+```javascript
 // e.g.
 Routes.userPath(1);
 Routes.rootUrl();
@@ -31,7 +33,7 @@ Routes.rootUrl();
 
 Suppose we have the following in _config/routes.rb_:
 
-```
+```ruby
 Rails.application.routes.draw do
   root: "home#index"
   get "/google", to: redirect("https://www.google.com/"), as: :google
@@ -45,7 +47,7 @@ end
 
 We would end up with the following routes being defined:
 
-```
+```javascript
 {
   "root": "/",
   "google": "https://www.google.com/",
@@ -71,16 +73,13 @@ Method | Result
 `Routes.apiUserPath()` | `/api/users/:id`
 `Routes.apiUserUrl()` | `http://www.example.com/api/users/:id`
 
-For routes with parameters, you can pass the as simple arguments to the method or as an object that
-responds to the parameter name (see `apiUsersPath` above for an example).
-
 ## Route Parameters
 
 Parameters can be passed to a route using arguments to the path/url method. There are two ways to do
 this, using argument values in the order they're supplied, or by passing an object that responds to
 each route parameter name.
 
-```
+```javascript
 // route in rails: /users/:id/roles/:role_id
 Routes.userRolePath(1, 2); // returns /users/1/roles/2
 Routes.userRolePath({ id: 1, role_id: 2 }); // also returns /users/1/roles/2
@@ -100,13 +99,38 @@ in the object will override the default format.
 You can also call the `json(), html(), xml() and none()` methods on routes. Doing so will override 
 the default and object supplied formats. For example:
 
-```
+```javascript
 // assuming .html is the default format in config/initializers/routesjs-rails.rb
 apiUsersPath(1) // returns /api/users/1.html
 apiUsersPath({ id: 1, format: "xml" }) // returns /api/users/1.xml
 apiUsersPath({ id: 1, format: "xml" }).json() // returns /api/users/1.json
 apiUsersPath(1).none() // returns /api/users/1
 ```
+
+# Choosing Which Routes to Include
+
+Routes can be selectively included/excluded by setting `include_patterns` and/or `exclude_patterns`
+in the initializer.
+
+These are arrays of `Regexp` objects that will be used to include and/or exclude matching route
+names. For example:
+
+```ruby
+# in config/initializer/routesjs-rails.rb
+
+RoutesJS::Routes.include_patterns = [
+  /nameSpace/,
+  /api/i
+]
+
+RoutesJS::Routes.exclude_patterns = [
+  /\Arails/i
+]
+```
+
+You can generate an initializer showing the defaults by running `rails g routes_js:install`
+
+__*Important: the names for the routes will be the JS (`camelized(:lower)`) names*__
 
 # Using as a CommonJS Module
 
