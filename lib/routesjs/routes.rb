@@ -4,7 +4,7 @@ module RoutesJS
       attr_accessor :default_format, :include_patterns, :exclude_patterns
 
       def as_json(routes = nil)
-        routes ||= ::Rails.application.routes.routes
+        routes ||= ::Rails.application.routes.named_routes.routes
         js_routes = build_routes(routes)
 
         results = { routes: js_routes }
@@ -19,16 +19,24 @@ module RoutesJS
       private
 
       def build_routes(routes)
-        routes.inject({}) do |result, route|
-          derived_route = RoutesJS::Routing::Route.new(
-            route,
-            include_patterns: include_patterns,
-            exclude_patterns: exclude_patterns
-          )
-
-          result[derived_route.name] = derived_route.url if derived_route.valid?
+        route_map = routes.values.inject({}) do |result, route|
+          derived_route = RoutesJS::Routing::Route.new(route)
+          result[derived_route.name] = derived_route.url if include_route?(derived_route)
           result
         end
+      end
+
+      def include_route?(route)
+        name = route.name
+        include?(name) && !exclude?(name)
+      end
+
+      def include?(name)
+        include_patterns.nil? || Array(include_patterns).any? { |regex| name =~ regex }
+      end
+
+      def exclude?(name)
+        exclude_patterns.present? && Array(exclude_patterns).any? { |regex| name =~ regex }
       end
     end
   end

@@ -1,37 +1,17 @@
 module RoutesJS
   module Routing
     class Route
-      attr_reader :name, :url, :options
+      attr_reader :name, :url
 
-      def initialize(rails_route, options = {})
+      def initialize(rails_route)
         @name = generate_name(rails_route)
         @url = generate_url(rails_route)
-        @options = options
-      end
-
-      def valid?
-        return false if name.blank?
-        include? && !exclude?
       end
 
       private
 
-      def include?
-        return true unless options[:include_patterns]
-        match?(options[:include_patterns])
-      end
-
-      def exclude?
-        return false unless options[:exclude_patterns]
-        match?(options[:exclude_patterns])
-      end
-
-      def match?(patterns)
-        Array(patterns).any? { |regex| name =~ regex }
-      end
-
       def generate_name(route)
-        route.name.try(:camelize, :lower)
+        route.name.camelize(:lower)
       end
 
       def generate_url(route)

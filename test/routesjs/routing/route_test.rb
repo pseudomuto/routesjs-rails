@@ -1,7 +1,6 @@
 require "test_helper"
 
-class RoutesJS::Routing::RouteTest < ActiveSupport::TestCase
-  include ActionDispatch::Assertions::RoutingAssertions
+class RoutesJS::Routing::RouteTest < RoutingTest
 
   test "hand crafted URLs are left untouched" do
     assert_equal "/admin", routes["admin"]
@@ -36,27 +35,21 @@ class RoutesJS::Routing::RouteTest < ActiveSupport::TestCase
   private
 
   def routes
-    @routes ||= RoutesJS::Routes.as_json(app_routes)["routes"]
-  end
+    @routes ||= with_routing do |set|
+      set.draw do
+        root to: "home#index"
+        get "/admin", to: "home#index", as: :admin
+        get "/google", to: redirect("https://www.google.com/"), as: :google
+        get "/rails/props", to: "home#index", as: :rails_props
 
-  def app_routes
-    @app_routes ||= begin
-      with_routing do |set|
-        set.draw do
-          root to: "home#index"
-          get "/admin", to: "home#index", as: :admin
-          get "/google", to: redirect("https://www.google.com/"), as: :google
-          get "/rails/props", to: "home#index", as: :rails_props
-
-          namespace :api do
-            root to: "api#index"
-            get "/redir", to: redirect("/"), as: :redir
-            resources :users, only: [:index, :show]
-          end
+        namespace :api do
+          root to: "api#index"
+          get "/redir", to: redirect("/"), as: :redir
+          resources :users, only: [:index, :show]
         end
-
-        set.routes
       end
+
+      RoutesJS::Routes.as_json(set.named_routes.routes)["routes"]
     end
   end
 end

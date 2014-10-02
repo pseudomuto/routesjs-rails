@@ -1,13 +1,6 @@
 require "test_helper"
 
-class RoutesJS::RoutesTest < ActiveSupport::TestCase
-  include ActionDispatch::Assertions::RoutingAssertions
-
-  setup do
-    RoutesJS::Routes.default_format = nil
-    RoutesJS::Routes.include_patterns = nil
-    RoutesJS::Routes.exclude_patterns = nil
-  end
+class RoutesJS::RoutesTest < RoutingTest
 
   test "routes are rendered as part of json object" do
     assert config.has_key?("routes")
@@ -61,7 +54,7 @@ class RoutesJS::RoutesTest < ActiveSupport::TestCase
         end
       end
 
-      set.routes
+      set.named_routes.routes
     end
   end
 end
