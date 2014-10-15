@@ -16,13 +16,11 @@ Rails.backtrace_cleaner.remove_silencers!
 class RoutingTest < ActiveSupport::TestCase
   include ActionDispatch::Assertions::RoutingAssertions
 
-  setup :default_route_settings
+  setup :init_routesjs
 
   private
 
-  def default_route_settings
-    RoutesJS::Routes.default_format = nil
-    RoutesJS::Routes.include_patterns = nil
-    RoutesJS::Routes.exclude_patterns = nil
+  def init_routesjs
+    RoutesJS::Routes.init
   end
 end

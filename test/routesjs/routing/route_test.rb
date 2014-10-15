@@ -26,12 +26,6 @@ class RoutesJS::Routing::RouteTest < RoutingTest
     assert_equal "/api", routes["apiRoot"]
   end
 
-  test "routes that start with /rails are excluded" do
-    routes.each do |key, value|
-      refute key =~ /\Arails/
-    end
-  end
-
   private
 
   def routes

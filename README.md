@@ -11,14 +11,12 @@ Make your Rails routes available in JS!
 # Installation
 
 * Add `gem routesjs-rails` to your _Gemfile_ and run `bundle install`
+* Run `rails g routes_js:install`
 * Add `//= require routesjs-rails` to your _application.js_ file.
-
-Optionally, you can run `rails g routes_js:install` to create an initializer for configuring
-routesjs-rails.
 
 # Usage
 
-Requiring `routesjs-rails` will make a global object available called `Routes`. This object
+Requiring `routesjs-rails` in your JS manifest, will create a global object called `Routes`. This object
 will have two methods for every _named_ route in config/routes.rb; the path method and the url
 method.
 
@@ -46,19 +44,6 @@ end
 ```
 
 We would end up with the following routes being defined:
-
-```javascript
-{
-  "root": "/",
-  "google": "https://www.google.com/",
-  "apiRoot": "/api",
-  "apiUsers": "/api/users",
-  "apiUser": "/api/users/:id"
-}
-```
-
-This object will be passed to the Route object's initialization function, which will make the following
-methods available (assuming you're running your site at `http://www.example.com/`):
 
 Method | Result
 ------ | ------
@@ -92,10 +77,6 @@ example:
 
 `Routes.userRolePath({ id: 1, role_id: 2, format: "json" }) // returns /users/1/roles/2.json`
 
-You can also configure a default format globally by setting `RoutesJS::Routes.default_format` in the
-initializer (run `rails g routes_js:install` to create a commented initializer). Formats specified
-in the object will override the default format.
-
 You can also call the `json(), html(), xml() and none()` methods on routes. Doing so will override 
 the default and object supplied formats. For example:
 
@@ -107,30 +88,33 @@ apiUsersPath({ id: 1, format: "xml" }).json() // returns /api/users/1.json
 apiUsersPath(1).none() // returns /api/users/1
 ```
 
-# Choosing Which Routes to Include
+### Setting a Global Default
 
-Routes can be selectively included/excluded by setting `include_patterns` and/or `exclude_patterns`
-in the initializer.
+The default format can be set by suppliying a `:default_format` option in the initializer.
 
-These are arrays of `Regexp` objects that will be used to include and/or exclude matching route
-names. For example:
-
-```ruby
-# in config/initializer/routesjs-rails.rb
-
-RoutesJS::Routes.include_patterns = [
-  /nameSpace/,
-  /api/i
-]
-
-RoutesJS::Routes.exclude_patterns = [
-  /\Arails/i
-]
+```
+# config/initializers/routesjs-rails.rb
+RoutesJS::Routes.init(default_format: :json)
 ```
 
-You can generate an initializer showing the defaults by running `rails g routes_js:install`
+Formats specified on the object will override the default format.
 
-__*Important: the names for the routes will be the JS (`camelized(:lower)`) names*__
+# Choosing Which Routes to Include
+
+Routes can be selectively included/excluded by passing an array of routes to either `:only` or
+`:except` in the initializer.
+
+For example:
+
+```
+# in config/initializers/routesjs-rails.rb
+
+# include routes using only
+RoutesJS::Routes.init(only: [:root, :new_user])
+
+# or to exclude routes using except
+# RoutesJS::Routes.init(except: :root)
+```
 
 # Using as a CommonJS Module
 

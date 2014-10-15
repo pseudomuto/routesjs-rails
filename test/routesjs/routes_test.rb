@@ -11,7 +11,7 @@ class RoutesJS::RoutesTest < RoutingTest
   end
 
   test "when specified, default format is part of the json object" do
-    RoutesJS::Routes.default_format = "json"
+    RoutesJS::Routes.init(default_format: :json)
     assert config.has_key?("format")
   end
 
@@ -19,17 +19,16 @@ class RoutesJS::RoutesTest < RoutingTest
     refute_includes config["routes"].values, "/path"
   end
 
-  test "when specified include patterns filter by name" do
-    RoutesJS::Routes.include_patterns = [/root/, /new/]
-    expected_paths = ["/", "/included/users/new", "/excluded/admins/new" ]
-
-    assert_equal expected_paths.size, config["routes"].size
-    expected_paths.each { |path| assert_includes config["routes"].values, path }
+  test "support for only filter" do
+    RoutesJS::Routes.init(only: :root)
+    assert_equal 1, config["routes"].size
+    assert_equal "root", config["routes"].keys.first
   end
 
-  test "when specified, exclude patterns filter by name" do
-    RoutesJS::Routes.exclude_patterns = [/excluded/i]
-    config["routes"].values.each { |route| refute_match /excluded/i, route }
+  test "support for except filter" do
+    RoutesJS::Routes.init(except: [:root, :google])
+    refute_includes config["routes"].keys, "root"
+    assert_includes config["routes"].keys, "newIncludedUser"
   end
 
   private
