@@ -6,24 +6,24 @@
 
 Make your Rails routes available in JS!
 
+**Supports Ruby 1.9.3+ and Rails 4.0+**
+
 # Installation
 
 * Add `gem routesjs-rails` to your _Gemfile_ and run `bundle install`
+* Run `rails g routes_js:install`
 * Add `//= require routesjs-rails` to your _application.js_ file.
-
-Optionally, you can run `rails g routes_js:install` to create an initializer for configuring
-routesjs-rails.
 
 # Usage
 
-Requiring `routesjs-rails` will make a global object available called `Routes`. This object
+Requiring `routesjs-rails` in your JS manifest, will create a global object called `Routes`. This object
 will have two methods for every _named_ route in config/routes.rb; the path method and the url
 method.
 
 The _path_ version of the method will return the absolute path to the resource, while the _url_
 version will return the full (including protocol, hostname, port, etc) URL to the resource.
 
-```
+```javascript
 // e.g.
 Routes.userPath(1);
 Routes.rootUrl();
@@ -31,7 +31,7 @@ Routes.rootUrl();
 
 Suppose we have the following in _config/routes.rb_:
 
-```
+```ruby
 Rails.application.routes.draw do
   root: "home#index"
   get "/google", to: redirect("https://www.google.com/"), as: :google
@@ -44,19 +44,6 @@ end
 ```
 
 We would end up with the following routes being defined:
-
-```
-{
-  "root": "/",
-  "google": "https://www.google.com/",
-  "apiRoot": "/api",
-  "apiUsers": "/api/users",
-  "apiUser": "/api/users/:id"
-}
-```
-
-This object will be passed to the Route object's initialization function, which will make the following
-methods available (assuming you're running your site at `http://www.example.com/`):
 
 Method | Result
 ------ | ------
@@ -71,16 +58,13 @@ Method | Result
 `Routes.apiUserPath()` | `/api/users/:id`
 `Routes.apiUserUrl()` | `http://www.example.com/api/users/:id`
 
-For routes with parameters, you can pass the as simple arguments to the method or as an object that
-responds to the parameter name (see `apiUsersPath` above for an example).
-
 ## Route Parameters
 
 Parameters can be passed to a route using arguments to the path/url method. There are two ways to do
 this, using argument values in the order they're supplied, or by passing an object that responds to
 each route parameter name.
 
-```
+```javascript
 // route in rails: /users/:id/roles/:role_id
 Routes.userRolePath(1, 2); // returns /users/1/roles/2
 Routes.userRolePath({ id: 1, role_id: 2 }); // also returns /users/1/roles/2
@@ -93,19 +77,43 @@ example:
 
 `Routes.userRolePath({ id: 1, role_id: 2, format: "json" }) // returns /users/1/roles/2.json`
 
-You can also configure a default format globally by setting `RoutesJS::Routes.default_format` in the
-initializer (run `rails g routes_js:install` to create a commented initializer). Formats specified
-in the object will override the default format.
-
 You can also call the `json(), html(), xml() and none()` methods on routes. Doing so will override 
 the default and object supplied formats. For example:
 
-```
+```javascript
 // assuming .html is the default format in config/initializers/routesjs-rails.rb
 apiUsersPath(1) // returns /api/users/1.html
 apiUsersPath({ id: 1, format: "xml" }) // returns /api/users/1.xml
 apiUsersPath({ id: 1, format: "xml" }).json() // returns /api/users/1.json
 apiUsersPath(1).none() // returns /api/users/1
+```
+
+### Setting a Global Default
+
+The default format can be set by suppliying a `:default_format` option in the initializer.
+
+```
+# config/initializers/routesjs-rails.rb
+RoutesJS::Routes.init(default_format: :json)
+```
+
+Formats specified on the object will override the default format.
+
+# Choosing Which Routes to Include
+
+Routes can be selectively included/excluded by passing an array of routes to either `:only` or
+`:except` in the initializer.
+
+For example:
+
+```
+# in config/initializers/routesjs-rails.rb
+
+# include routes using only
+RoutesJS::Routes.init(only: [:root, :new_user])
+
+# or to exclude routes using except
+# RoutesJS::Routes.init(except: :root)
 ```
 
 # Using as a CommonJS Module

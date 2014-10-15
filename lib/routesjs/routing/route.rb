@@ -8,14 +8,10 @@ module RoutesJS
         @url = generate_url(rails_route)
       end
 
-      def valid?
-        !(name.blank? || /^rails/.match(name))
-      end
-
       private
 
       def generate_name(route)
-        route.name.try(:camelize, :lower)
+        route.name.camelize(:lower)
       end
 
       def generate_url(route)
